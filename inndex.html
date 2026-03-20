@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SS Group Members — VCMIS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1f44;--blue:#1a56db;--blue2:#1e40af;
+  --bg:#f8fafc;--white:#ffffff;--border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--text2:#334155;--muted:#64748b;--dim:#94a3b8;
+  --green:#059669;--green-lt:#ecfdf5;--green-dk:#065f46;
+  --red:#dc2626;--red-lt:#fef2f2;--red-dk:#991b1b;
+  --amber:#d97706;--amber-lt:#fffbeb;--amber-dk:#92400e;
+  --purple:#7c3aed;--purple-lt:#f5f3ff;--purple-dk:#4c1d95;
+  --teal:#0d9488;--teal-lt:#f0fdfa;--teal-dk:#134e4a;
+  --indigo:#4f46e5;--indigo-lt:#eef2ff;--indigo-dk:#312e81;
+  --rose:#e11d48;--rose-lt:#fff1f2;--rose-dk:#881337;
+  --r:8px;--r-lg:12px;--r-xl:18px;
+  --sh:0 1px 3px rgba(0,0,0,.06),0 1px 8px rgba(0,0,0,.04);
+  --sh-lg:0 4px 20px rgba(0,0,0,.08);
+  --sh-xl:0 8px 36px rgba(0,0,0,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── Topbar ── */
+.topbar{background:#fff;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04);position:sticky;top:0;z-index:50}
+.tb-brand{display:flex;align-items:center;gap:10px}
+.tb-logo{width:32px;height:32px;border-radius:8px;background:#f8fafc;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px}
+.tb-name{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.tb-name span{color:var(--muted);font-weight:400}
+.tb-nav{display:flex;align-items:center;gap:2px}
+.tb-nav a{font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;padding:6px 12px;border-radius:var(--r);transition:all .15s}
+.tb-nav a:hover{background:#f1f5f9;color:var(--text)}
+.tb-nav a.active{background:#f1f5f9;color:var(--text)}
+.tb-right{display:flex;align-items:center;gap:12px}
+.tb-sep{width:1px;height:20px;background:var(--border)}
+.tb-user{display:flex;align-items:center;gap:8px;color:var(--text2);font-size:13px;cursor:pointer}
+.tb-avatar{width:30px;height:30px;border-radius:50%;background:#e2e8f0;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text2)}
+
+/* ── Hero ── */
+.hero{background:#fff;padding:20px 0 0;border-bottom:1px solid var(--border)}
+.hero-inner{max-width:1280px;margin:0 auto;padding:0 20px 20px}
+.breadcrumb{display:flex;align-items:center;gap:5px;font-size:12px;margin-bottom:10px;flex-wrap:wrap}
+.breadcrumb a{color:var(--muted);text-decoration:none;transition:color .15s}
+.breadcrumb a:hover{color:var(--blue)}
+.breadcrumb .sep{color:var(--border2)}
+.breadcrumb .cur{color:var(--text2);font-weight:500}
+.hero h1{font-size:clamp(18px,3vw,22px);font-weight:700;color:var(--text);letter-spacing:-.02em;margin-bottom:4px}
+.hero p{font-size:13px;color:var(--muted);line-height:1.55;max-width:560px}
+
+/* ── Layout ── */
+.wrap{max-width:1280px;margin:0 auto;padding:24px 20px 80px}
+
+/* ── Stat cards ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}}
+.scard{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;box-shadow:var(--sh);border-left:3px solid transparent}
+.scard.blue{border-left-color:var(--blue)}
+.scard.green{border-left-color:var(--green)}
+.scard.amber{border-left-color:var(--amber)}
+.scard.rose{border-left-color:var(--rose)}
+.scard-lbl{font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.scard-val{font-size:24px;font-weight:700;color:var(--text)}
+.scard.green .scard-val{color:var(--green-dk)}
+.scard.amber .scard-val{color:var(--amber-dk)}
+.scard.rose .scard-val{color:var(--rose-dk)}
+
+/* ── Card ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-xl);box-shadow:var(--sh-xl);overflow:hidden}
+.card-body{padding:20px 24px 24px}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.card-title{font-size:15px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.tb-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.search-wrap{display:flex;align-items:center;border:1.5px solid var(--border2);border-radius:var(--r);overflow:hidden;background:var(--white);transition:border-color .2s}
+.search-wrap:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.08)}
+.search-wrap svg{margin:0 8px;color:var(--dim);flex-shrink:0}
+.search-wrap input{border:none;outline:none;background:transparent;padding:8px 8px 8px 0;font-size:13px;color:var(--text);width:200px;font-family:'Inter',sans-serif}
+.search-wrap input::placeholder{color:var(--dim)}
+.fsel{border:1.5px solid var(--border2);border-radius:var(--r);padding:8px 10px;font-size:12px;font-weight:500;background:var(--white);color:var(--text2);outline:none;font-family:'Inter',sans-serif;cursor:pointer;transition:border-color .2s}
+.fsel:focus{border-color:var(--blue)}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r);border:1.5px solid var(--border2);background:var(--white);font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
+.btn:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 3px 10px rgba(26,86,219,.25)}
+.btn.primary:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 5px 16px rgba(26,86,219,.35)}
+.btn.primary:active{transform:none}
+.btn.danger{background:var(--red-dk);border-color:var(--red-dk);color:#fff}
+.btn.danger:hover{background:#7f1d1d}
+.btn.secondary{color:var(--muted)}
+.btn.icon-only{padding:8px 10px}
+
+/* ── Table ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:#f8fafc}
+thead th{text-align:left;padding:11px 14px;border-bottom:1.5px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .12s}
+tbody tr:hover td{background:#f5f8ff}
+tr.hl td{background:#fffbeb!important;transition:background 1.2s}
+tr.stopped td{opacity:.65}
+
+/* ── Badges / pills ── */
+.id-pill{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;color:var(--blue);background:#eff6ff;padding:3px 9px;border-radius:6px;border:1px solid #bfdbfe;display:inline-block;cursor:pointer;transition:all .15s}
+.id-pill:hover{background:#dbeafe}
+.group-pill{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;color:var(--indigo-dk);background:var(--indigo-lt);padding:3px 9px;border-radius:6px;border:1px solid #c7d2fe;display:inline-block}
+.member-cell{display:flex;flex-direction:column;gap:2px}
+.member-name{font-size:13px;font-weight:600;color:var(--text)}
+.member-code{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--dim)}
+.date-cell{font-size:12.5px;font-weight:500;color:var(--text2)}
+.stop-date{font-size:12px;color:var(--rose);font-weight:500}
+.time-cell{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2)}
+.cap-by{font-size:12.5px;font-weight:500;color:var(--text2)}
+.comment-cell{font-size:12px;color:var(--text2);max-width:160px;overflow:hidden;text-overflow:ellipsis}
+.no-val{color:var(--dim);font-style:italic;font-size:12px}
+.row-num{font-size:12px;color:var(--dim)}
+.row-info{font-size:11px;color:var(--dim);margin-top:12px}
+
+/* ── Status badge ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.badge.active{background:var(--green-lt);color:var(--green-dk);border:1px solid #a7f3d0}
+.badge.active::before{background:var(--green)}
+.badge.stopped{background:var(--rose-lt);color:var(--rose-dk);border:1px solid #fecdd3}
+.badge.stopped::before{background:var(--rose)}
+.badge.status{background:#f1f5f9;color:#475569;border:1px solid var(--border2)}
+.badge.status::before{background:var(--dim)}
+
+/* ── Toggle action button ── */
+.act-btns{display:flex;gap:5px;align-items:center}
+.act-btn{width:30px;height:30px;border-radius:var(--r);border:1.5px solid var(--border2);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .15s;flex-shrink:0}
+.act-btn:hover{transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.act-btn.view:hover{border-color:#6366f1;color:#6366f1;background:#eef2ff}
+.act-btn.edit:hover{border-color:var(--blue);color:var(--blue);background:#eff6ff}
+.act-btn.tog-stop:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-lt)}
+.act-btn.tog-active:hover{border-color:var(--green);color:var(--green);background:var(--green-lt)}
+.act-btn.del:hover{border-color:var(--red);color:var(--red);background:var(--red-lt)}
+
+/* ── Empty ── */
+.empty{padding:52px 24px;text-align:center;color:var(--dim)}
+.empty-icon{font-size:38px;margin-bottom:12px;opacity:.35}
+.empty p{font-size:14px;margin-bottom:8px}
+
+/* ── Modal ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:200;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.overlay.show{display:flex}
+.modal{background:var(--white);border-radius:var(--r-xl);box-shadow:0 24px 60px rgba(0,0,0,.18);width:100%;overflow:hidden;animation:popIn .22s cubic-bezier(.34,1.3,.64,1)}
+.modal.wide{max-width:580px}
+.modal.sm{max-width:420px}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(6px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border)}
+.modal-hd h3{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.modal-hd h3 svg{color:var(--blue)}
+.modal-x{background:none;border:none;cursor:pointer;color:var(--dim);font-size:20px;line-height:1;padding:2px 4px;border-radius:4px;transition:all .15s}
+.modal-x:hover{color:var(--text);background:#f1f5f9}
+.modal-body{padding:22px;max-height:72vh;overflow-y:auto}
+.modal-ft{display:flex;justify-content:flex-end;gap:8px;padding:16px 22px;border-top:1px solid var(--border);background:#f8fafc}
+.del-overlay .modal-hd{background:var(--red-lt);border-bottom-color:#fecaca}
+.del-overlay .modal-hd h3{color:var(--red-dk)}
+.del-overlay .modal-hd h3 svg{color:var(--red)}
+
+/* ── Form ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
+.field{margin-bottom:0}.field.full{grid-column:1/-1}
+.flbl{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);margin-bottom:6px}
+.flbl .req{color:var(--red);margin-left:2px}
+.finput,.fselect{width:100%;padding:10px 13px;border:1.5px solid var(--border2);border-radius:var(--r);font-size:13px;color:var(--text);background:var(--white);outline:none;font-family:'Inter',sans-serif;transition:border-color .2s,box-shadow .2s}
+.finput:focus,.fselect:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.1)}
+.finput.err,.fselect.err{border-color:var(--red)}
+.finput:disabled{background:#f1f5f9;color:var(--muted);cursor:not-allowed}
+.fsec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:14px 0 10px;border-bottom:1px solid var(--border);margin-bottom:4px;grid-column:1/-1}
+.fhint{font-size:11px;color:var(--dim);margin-top:4px}
+.ferr{font-size:11px;color:var(--red);margin-top:4px;display:none}
+.ferr.show{display:block}
+.fk-preview{margin-top:6px;font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;min-height:18px}
+.fk-badge{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;padding:1px 7px;border-radius:4px}
+.fk-badge.teal{background:var(--teal-lt);color:var(--teal-dk);border:1px solid #99f6e4}
+.fk-badge.indigo{background:var(--indigo-lt);color:var(--indigo-dk);border:1px solid #c7d2fe}
+
+/* ── Detail view ── */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.detail-cell{background:var(--white);padding:14px 18px}
+.detail-cell.full{grid-column:1/-1}
+.dlbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:5px}
+.dval{font-size:13px;font-weight:500;color:var(--text);word-break:break-word}
+.dval.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+.dval.empty-val{color:var(--dim);font-style:italic;font-weight:400}
+
+/* ── Delete confirm ── */
+.del-box{background:var(--red-lt);border:1px solid #fecaca;border-radius:var(--r);padding:12px 14px;margin:10px 0}
+.del-box strong{display:block;font-size:14px;color:var(--red-dk);margin-bottom:2px}
+.del-box span{font-size:11px;color:#b91c1c}
+
+/* ── Toast ── */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:11px 16px;border-radius:var(--r-lg);font-size:13px;font-weight:500;color:#fff;box-shadow:var(--sh-lg);pointer-events:auto;animation:toastIn .3s ease;display:flex;align-items:center;gap:8px;max-width:340px}
+.toast.success{background:#065f46;border:1px solid var(--green)}
+.toast.danger{background:#7f1d1d;border:1px solid var(--red)}
+.toast.warning{background:#78350f;border:1px solid var(--amber)}
+.toast.info{background:#1e3a8a;border:1px solid var(--blue)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:slideUp .4s ease both}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .topbar{padding:0 16px}.tb-nav{display:none}
+  .hero-inner,.wrap{padding-left:16px;padding-right:16px}
+  .card-body{padding:16px}
+  .search-wrap input{width:130px}
+  .stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .search-wrap input{width:100px}
+  .tbl-wrap table{min-width:1160px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Topbar ── -->
+<div class="topbar">
+  <div class="tb-brand">
+    <div class="tb-logo">⛪</div>
+    <div class="tb-name">VCMIS <span>Member Portal</span></div>
+  </div>
+  <div class="tb-nav">
+    <a href="#">Dashboard</a>
+    <a href="#">Members</a>
+    <a href="#" class="active">Settings</a>
+  </div>
+  <div class="tb-right">
+    <div class="tb-sep"></div>
+    <div class="tb-user">
+      <div class="tb-avatar">AD</div>
+      <span>Admin</span>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--dim)"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="#">Home</a><span class="sep">/</span>
+      <a href="#">Settings</a><span class="sep">/</span>
+      <a href="#">Sunday School</a><span class="sep">/</span>
+      <span class="cur">Group Members</span>
+    </div>
+    <div>
+      <h1>SS Group Members Management</h1>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main ── -->
+<div class="wrap">
+
+  <div class="stats anim">
+    <div class="scard blue"><div class="scard-lbl">Total Records</div><div class="scard-val" id="stTotal">0</div></div>
+    <div class="scard green"><div class="scard-lbl">Active Members</div><div class="scard-val" id="stActive">0</div></div>
+    <div class="scard rose"><div class="scard-lbl">Stopped</div><div class="scard-val" id="stStopped">0</div></div>
+    <div class="scard amber"><div class="scard-lbl">Unique Groups</div><div class="scard-val" id="stGroups">0</div></div>
+  </div>
+
+  <div class="card anim" style="animation-delay:.05s">
+    <div class="card-body">
+
+      <div class="toolbar">
+        <div class="card-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Group Members list
+        </div>
+        <div class="tb-controls">
+          <div class="search-wrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="srchBox" placeholder="Search member, group, status…" oninput="doFilter()">
+          </div>
+          <select class="fsel" id="filtGroup" onchange="doFilter()">
+            <option value="">All groups</option>
+          </select>
+          <select class="fsel" id="filtStatus" onchange="doFilter()">
+            <option value="">All statuses</option>
+            <option value="active">Active</option>
+            <option value="stopped">Stopped</option>
+          </select>
+          <button class="btn primary" onclick="openAdd()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add member
+          </button>
+          <button class="btn icon-only" title="Refresh" onclick="reloadTable()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <colgroup>
+            <col style="width:44px">
+            <col style="width:90px">
+            <col style="width:100px">
+            <col style="width:180px">
+            <col style="width:140px">
+            <col style="width:115px">
+            <col style="width:120px">
+            <col style="width:110px">
+            <col style="width:100px">
+            <col style="width:110px">
+            <col style="width:100px">
+            <col>
+            <col style="width:120px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Mem ID</th>
+              <th>Group</th>
+              <th>Member (PP Code)</th>
+              <th>Mem Status</th>
+              <th>Join Date</th>
+              <th>Stop Date</th>
+              <th>Captured Date</th>
+              <th>Captured Time</th>
+              <th>Captured By</th>
+              <th>Status</th>
+              <th>Comments</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tBody"></tbody>
+        </table>
+      </div>
+      <div class="row-info" id="rowInfo"></div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     ADD / EDIT MODAL
+══════════════════════════════════════════ -->
+<div class="overlay" id="formOverlay">
+  <div class="modal wide">
+    <div class="modal-hd">
+      <h3>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <span id="mTitle">Add Group Member</span>
+      </h3>
+      <button class="modal-x" onclick="closeForm()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="mOrigID">
+      <div class="form-grid">
+
+        <div class="fsec">Record Identity</div>
+
+        <div class="field">
+          <label class="flbl">Member ID</label>
+          <input type="text" class="finput" id="mMemID" disabled placeholder="Auto-generated"
+            style="font-family:'JetBrains Mono',monospace">
+          <div class="fhint">Auto-incremented. Read-only.</div>
+        </div>
+
+        <div class="field">
+          <label class="flbl">Group <span class="req">*</span></label>
+          <select class="fselect" id="mGroupID" onchange="updateGroupPreview()">
+            <option value="">— Select group —</option>
+          </select>
+          <div class="fk-preview" id="groupPreview"></div>
+          <div class="ferr" id="eGroupID">Please select a group.</div>
+        </div>
+
+        <div class="fsec">Member Details</div>
+
+        <div class="field full">
+          <label class="flbl">Member (PP Code) <span class="req">*</span></label>
+          <select class="fselect" id="mPPCode" onchange="updatePPPreview()">
+            <option value="">— Select member —</option>
+          </select>
+          <div class="fk-preview" id="ppPreview"></div>
+          <div class="ferr" id="ePPCode">Please select a member.</div>
+        </div>
+
+        <div class="field full">
+          <label class="flbl">Membership Status <span class="req">*</span></label>
+          <select class="fselect" id="mMemStatus">
+            <option value="">— Select status —</option>
+          </select>
+          <div class="ferr" id="eMemStatus">Please select a membership status.</div>
+        </div>
+
+        <div class="fsec">Dates</div>
+
+        <div class="field">
+          <label class="flbl">Join Date <span class="req">*</span></label>
+          <input type="date" class="finput" id="mGrpMemDate">
+          <div class="ferr" id="eGrpMemDate">Join date is required.</div>
+        </div>
+
+        <div class="field">
+          <label class="flbl">Stop Date</label>
+          <input type="date" class="finput" id="mStopDate">
+          <div class="fhint">Leave blank if member is still active.</div>
+        </div>
+
+        <div class="fsec">Additional Details</div>
+
+        <div class="field full">
+          <label class="flbl">Comments</label>
+          <textarea class="finput" id="mComments" placeholder="Optional notes…" maxlength="200"
+            rows="3" style="resize:vertical"></textarea>
+          <div class="fhint">Max 200 characters.</div>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn secondary" onclick="closeForm()">Cancel</button>
+      <button class="btn primary" onclick="saveRecord()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        <span id="mSaveTxt">Save member</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     VIEW MODAL
+══════════════════════════════════════════ -->
+<div class="overlay" id="viewOverlay">
+  <div class="modal wide">
+    <div class="modal-hd">
+      <h3>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Group Member Details
+      </h3>
+      <button class="modal-x" onclick="closeView()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0">
+      <div class="detail-grid" id="detailGrid"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn secondary" onclick="closeView()">Close</button>
+      <button class="btn primary" onclick="editFromView()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Edit this record
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     DELETE MODAL
+══════════════════════════════════════════ -->
+<div class="overlay del-overlay" id="delOverlay">
+  <div class="modal sm">
+    <div class="modal-hd">
+      <h3>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Delete Group Member
+      </h3>
+      <button class="modal-x" onclick="closeDel()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="dID">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:4px">You are about to permanently delete:</p>
+      <div class="del-box">
+        <strong id="dName">—</strong>
+        <span>This action cannot be undone.</span>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:10px">
+        💡 Consider setting a <strong>Stop Date</strong> instead to keep the membership history for reporting.
+      </p>
+    </div>
+    <div class="modal-ft">
+      <button class="btn secondary" onclick="closeDel()">Cancel</button>
+      <button class="btn danger" onclick="confirmDelete()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Delete permanently
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ══════════════════════════════════════════════
+   REFERENCE DATA
+   ⚠ Replace with actual table data when available
+══════════════════════════════════════════════ */
+const GROUPS = [
+  {id:1,name:'Group 1'},{id:2,name:'Group 2'},{id:3,name:'Group 3'},
+  {id:4,name:'Group 4'},{id:5,name:'Group 5'},{id:6,name:'Group 6'},
+  {id:7,name:'Group 7'},{id:8,name:'Group 8'},{id:9,name:'Group 9'},
+  {id:10,name:'Group 10'},
+];
+
+const MEMBERS = [
+  {ppcode:'PP00001',name:'Kwame Asante'},
+  {ppcode:'PP00002',name:'Abena Mensah'},
+  {ppcode:'PP00003',name:'Kofi Boateng'},
+  {ppcode:'PP00004',name:'Akosua Darko'},
+  {ppcode:'PP00005',name:'Yaw Agyemang'},
+  {ppcode:'PP00006',name:'Ama Owusu'},
+  {ppcode:'PP00007',name:'Kojo Appiah'},
+  {ppcode:'PP00008',name:'Efua Bempong'},
+];
+
+/* ⚠ Replace with your actual memstatusID reference table */
+const MEM_STATUSES = [
+  {id:1, label:'Regular'},
+  {id:2, label:'Visitor'},
+  {id:3, label:'Transfer In'},
+  {id:4, label:'Transfer Out'},
+  {id:5, label:'Absent'},
+  {id:6, label:'Deceased'},
+];
+
+/* ══════════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════════ */
+function nowDate(){ return new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function nowTime(){ return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase(); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(d){
+  if(!d) return '—';
+  const dt=new Date(d); if(isNaN(dt)) return d;
+  return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+let _nextID=1;
+function nextID(){ return _nextID++; }
+function getGroup(id){ return GROUPS.find(g=>g.id===Number(id))||{id,name:'Group '+id}; }
+function getMember(pp){ return MEMBERS.find(m=>m.ppcode===pp)||{ppcode:pp,name:'Unknown Member'}; }
+function getMemStatus(id){ return MEM_STATUSES.find(s=>s.id===Number(id))||{id,label:'Status '+id}; }
+function isActive(r){ return !r.stopDate; }
+
+function hlRow(id){
+  setTimeout(()=>{
+    const r=document.getElementById('row-'+id);
+    if(!r)return;
+    r.classList.add('hl');
+    r.scrollIntoView({behavior:'smooth',block:'nearest'});
+    setTimeout(()=>r.classList.remove('hl'),2500);
+  },220);
+}
+
+function showToast(msg,type='success'){
+  const icons={
+    success:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+    danger: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+    warning:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>',
+    info:   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+  };
+  const w=document.getElementById('toastWrap');
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  t.innerHTML=(icons[type]||'')+esc(msg);
+  w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300);},3200);
+}
+
+/* ── FK previews ── */
+function updateGroupPreview(){
+  const val=document.getElementById('mGroupID').value;
+  const el=document.getElementById('groupPreview');
+  if(!val){el.innerHTML='';return;}
+  const g=getGroup(val);
+  el.innerHTML=`<span class="fk-badge indigo">${esc(g.id)}</span> ${esc(g.name)}`;
+}
+function updatePPPreview(){
+  const val=document.getElementById('mPPCode').value;
+  const el=document.getElementById('ppPreview');
+  if(!val){el.innerHTML='';return;}
+  const m=getMember(val);
+  el.innerHTML=`<span class="fk-badge teal">${esc(m.ppcode)}</span> ${esc(m.name)}`;
+}
+
+/* ══════════════════════════════════════════════
+   POPULATE DROPDOWNS
+══════════════════════════════════════════════ */
+function populateDropdowns(){
+  const mGrp=document.getElementById('mGroupID');
+  const fGrp=document.getElementById('filtGroup');
+  const mPP =document.getElementById('mPPCode');
+  const mSts=document.getElementById('mMemStatus');
+
+  GROUPS.forEach(g=>{
+    const o=`<option value="${g.id}">${g.id} — ${esc(g.name)}</option>`;
+    mGrp.innerHTML+=o; fGrp.innerHTML+=o;
+  });
+  MEMBERS.forEach(m=>{
+    mPP.innerHTML+=`<option value="${esc(m.ppcode)}">${esc(m.ppcode)} — ${esc(m.name)}</option>`;
+  });
+  MEM_STATUSES.forEach(s=>{
+    mSts.innerHTML+=`<option value="${s.id}">${s.id} — ${esc(s.label)}</option>`;
+  });
+}
+
+/* ══════════════════════════════════════════════
+   DATA — no seed rows
+══════════════════════════════════════════════ */
+let rows      = [];
+let viewingID = null;
+
+/* ══════════════════════════════════════════════
+   STATS
+══════════════════════════════════════════════ */
+function updateStats(){
+  document.getElementById('stTotal').textContent  = rows.length;
+  document.getElementById('stActive').textContent = rows.filter(r=>isActive(r)).length;
+  document.getElementById('stStopped').textContent= rows.filter(r=>!isActive(r)).length;
+  document.getElementById('stGroups').textContent = new Set(rows.map(r=>r.groupID)).size;
+}
+
+/* ══════════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════════ */
+function render(data){
+  const tb=document.getElementById('tBody');
+  const ri=document.getElementById('rowInfo');
+  ri.textContent='Showing '+data.length+' of '+rows.length+' records';
+
+  if(!data.length){
+    tb.innerHTML=`<tr><td colspan="13"><div class="empty"><div class="empty-icon">👥</div><p>No group member records found.</p><button class="btn primary" style="margin-top:8px" onclick="openAdd()">Add first member</button></div></td></tr>`;
+    return;
+  }
+
+  tb.innerHTML=data.map((r,i)=>{
+    const grp=getGroup(r.groupID);
+    const mem=getMember(r.ppcode);
+    const sts=getMemStatus(r.memstatusID);
+    const active=isActive(r);
+
+    const togCls  =active?'act-btn tog-stop':'act-btn tog-active';
+    const togTitle=active?'Set Stop Date (deactivate)':'Clear Stop Date (reactivate)';
+    const togSvg  =active
+      ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="16" cy="12" r="3" fill="currentColor"/></svg>`
+      : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="8" cy="12" r="3" fill="currentColor"/></svg>`;
+
+    return `
+    <tr id="row-${r.id}" class="${!active?'stopped':''}">
+      <td><span class="row-num">${i+1}</span></td>
+      <td><span class="id-pill" onclick="openView(${r.id})" title="View details">${r.id}</span></td>
+      <td><span class="group-pill" title="${esc(grp.name)}">${esc(r.groupID)}</span></td>
+      <td>
+        <div class="member-cell">
+          <span class="member-name">${esc(mem.name)}</span>
+          <span class="member-code">${esc(r.ppcode)}</span>
+        </div>
+      </td>
+      <td><span class="badge status">${esc(sts.label)}</span></td>
+      <td><span class="date-cell">${fmtDate(r.grpMemDate)}</span></td>
+      <td>${r.stopDate?`<span class="stop-date">${fmtDate(r.stopDate)}</span>`:`<span class="no-val">—</span>`}</td>
+      <td><span class="date-cell">${esc(r.capturedDate)}</span></td>
+      <td><span class="time-cell">${esc(r.capturedTime)}</span></td>
+      <td><span class="cap-by">${esc(r.capturedBy)}</span></td>
+      <td>${active?'<span class="badge active">Active</span>':'<span class="badge stopped">Stopped</span>'}</td>
+      <td>${r.comments?`<span class="comment-cell" title="${esc(r.comments)}">${esc(r.comments)}</span>`:`<span class="no-val">—</span>`}</td>
+      <td>
+        <div class="act-btns">
+          <button class="act-btn view" title="View" onclick="openView(${r.id})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="act-btn edit" title="Edit" onclick="openEdit(${r.id})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="${togCls}" title="${togTitle}" onclick="doToggle(${r.id})">${togSvg}</button>
+          <button class="act-btn del" title="Delete" onclick="openDelete(${r.id})">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════
+   FILTER
+══════════════════════════════════════════════ */
+function doFilter(){
+  const q  =document.getElementById('srchBox').value.toLowerCase().trim();
+  const grp=document.getElementById('filtGroup').value;
+  const sts=document.getElementById('filtStatus').value;
+  const filtered=rows.filter(r=>{
+    const m=getMember(r.ppcode);
+    const s=getMemStatus(r.memstatusID);
+    const mq=!q||String(r.id).includes(q)||String(r.groupID).includes(q)
+              ||r.ppcode.toLowerCase().includes(q)||m.name.toLowerCase().includes(q)
+              ||s.label.toLowerCase().includes(q)||(r.comments||'').toLowerCase().includes(q);
+    const mg=!grp||String(r.groupID)===grp;
+    const ms=!sts||(sts==='active'?isActive(r):!isActive(r));
+    return mq&&mg&&ms;
+  });
+  render(filtered);
+}
+
+function reloadTable(){
+  document.getElementById('srchBox').value   ='';
+  document.getElementById('filtGroup').value ='';
+  document.getElementById('filtStatus').value='';
+  render(rows); showToast('Table refreshed','info');
+}
+
+/* ── Toggle stop/active ── */
+function doToggle(id){
+  const r=rows.find(x=>x.id===id); if(!r)return;
+  if(isActive(r)){
+    // set today as stop date
+    const today=new Date().toISOString().split('T')[0];
+    r.stopDate=today;
+    showToast('Member #'+id+' marked as stopped.','warning');
+  } else {
+    r.stopDate=null;
+    showToast('Member #'+id+' reactivated.','success');
+  }
+  doFilter(); updateStats(); hlRow(id);
+}
+
+/* ══════════════════════════════════════════════
+   ADD
+══════════════════════════════════════════════ */
+function openAdd(){
+  document.getElementById('mOrigID').value      ='';
+  document.getElementById('mMemID').value       ='Auto-generated';
+  document.getElementById('mGroupID').value     ='';
+  document.getElementById('mPPCode').value      ='';
+  document.getElementById('mMemStatus').value   ='';
+  document.getElementById('mGrpMemDate').value  ='';
+  document.getElementById('mStopDate').value    ='';
+  document.getElementById('mComments').value    ='';
+  document.getElementById('groupPreview').innerHTML='';
+  document.getElementById('ppPreview').innerHTML='';
+  document.getElementById('mTitle').textContent ='Add Group Member';
+  document.getElementById('mSaveTxt').textContent='Save member';
+  clearErrors();
+  document.getElementById('formOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('mGroupID').focus(),80);
+}
+
+/* ══════════════════════════════════════════════
+   EDIT
+══════════════════════════════════════════════ */
+function openEdit(id){
+  const r=rows.find(x=>x.id===id); if(!r)return;
+  document.getElementById('mOrigID').value      =id;
+  document.getElementById('mMemID').value       =id;
+  document.getElementById('mGroupID').value     =r.groupID;
+  document.getElementById('mPPCode').value      =r.ppcode;
+  document.getElementById('mMemStatus').value   =r.memstatusID;
+  document.getElementById('mGrpMemDate').value  =r.grpMemDate||'';
+  document.getElementById('mStopDate').value    =r.stopDate||'';
+  document.getElementById('mComments').value    =r.comments||'';
+  updateGroupPreview(); updatePPPreview();
+  document.getElementById('mTitle').textContent ='Edit Member — #'+id;
+  document.getElementById('mSaveTxt').textContent='Update member';
+  clearErrors(); closeView();
+  document.getElementById('formOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('mGroupID').focus(),80);
+}
+
+function closeForm(){ document.getElementById('formOverlay').classList.remove('show'); }
+
+function clearErrors(){
+  ['mGroupID','mPPCode','mMemStatus','mGrpMemDate'].forEach(id=>{
+    document.getElementById(id).classList.remove('err');
+  });
+  ['eGroupID','ePPCode','eMemStatus','eGrpMemDate'].forEach(id=>{
+    document.getElementById(id).classList.remove('show');
+  });
+}
+
+/* ══════════════════════════════════════════════
+   SAVE
+══════════════════════════════════════════════ */
+function saveRecord(){
+  clearErrors();
+  const gVal =document.getElementById('mGroupID').value;
+  const ppVal=document.getElementById('mPPCode').value;
+  const sVal =document.getElementById('mMemStatus').value;
+  const dVal =document.getElementById('mGrpMemDate').value;
+  let ok=true;
+
+  if(!gVal){ document.getElementById('mGroupID').classList.add('err');  document.getElementById('eGroupID').classList.add('show');  ok=false; }
+  if(!ppVal){document.getElementById('mPPCode').classList.add('err');   document.getElementById('ePPCode').classList.add('show');   ok=false; }
+  if(!sVal){ document.getElementById('mMemStatus').classList.add('err');document.getElementById('eMemStatus').classList.add('show');ok=false; }
+  if(!dVal){ document.getElementById('mGrpMemDate').classList.add('err');document.getElementById('eGrpMemDate').classList.add('show');ok=false;}
+  if(!ok)return;
+
+  const isEdit=!!document.getElementById('mOrigID').value;
+  const payload={
+    groupID:    Number(gVal),
+    ppcode:     ppVal,
+    memstatusID:Number(sVal),
+    grpMemDate: dVal,
+    stopDate:   document.getElementById('mStopDate').value||null,
+    comments:   document.getElementById('mComments').value.trim()||null,
+  };
+  const mem=getMember(ppVal);
+
+  if(!isEdit){
+    const newID=nextID();
+    rows.push({id:newID,...payload,capturedDate:nowDate(),capturedTime:nowTime(),capturedBy:'admin'});
+    showToast('Member #'+newID+' — '+mem.name+' added.');
+    closeForm(); doFilter(); updateStats(); hlRow(newID);
+  } else {
+    const oid=Number(document.getElementById('mOrigID').value);
+    const r=rows.find(x=>x.id===oid);
+    if(r) Object.assign(r,payload);
+    showToast('Member #'+oid+' updated successfully.');
+    closeForm(); doFilter(); updateStats(); hlRow(oid);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   VIEW
+══════════════════════════════════════════════ */
+function openView(id){
+  const r=rows.find(x=>x.id===id); if(!r)return;
+  viewingID=id;
+  const grp=getGroup(r.groupID);
+  const mem=getMember(r.ppcode);
+  const sts=getMemStatus(r.memstatusID);
+  const active=isActive(r);
+  document.getElementById('detailGrid').innerHTML=`
+    <div class="detail-cell">
+      <div class="dlbl">Member ID</div>
+      <div class="dval mono">${r.id}</div>
+    </div>
+    <div class="detail-cell">
+      <div class="dlbl">Status</div>
+      <div class="dval">${active?'<span class="badge active">Active</span>':'<span class="badge stopped">Stopped</span>'}</div>
+    </div>
+    <div class="detail-cell">
+      <div class="dlbl">Group</div>
+      <div class="dval">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--indigo-lt);color:var(--indigo-dk);padding:2px 8px;border-radius:4px;border:1px solid #c7d2fe">${esc(r.groupID)}</span>
+        <span style="margin-left:6px;font-size:12px;color:var(--muted)">${esc(grp.name)}</span>
+      </div>
+    </div>
+    <div class="detail-cell">
+      <div class="dlbl">Membership Status</div>
+      <div class="dval"><span class="badge status">${esc(sts.label)}</span></div>
+    </div>
+    <div class="detail-cell full">
+      <div class="dlbl">Member (PP Code)</div>
+      <div class="dval">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--teal-lt);color:var(--teal-dk);padding:2px 8px;border-radius:4px;border:1px solid #99f6e4">${esc(r.ppcode)}</span>
+        <span style="margin-left:8px">${esc(mem.name)}</span>
+      </div>
+    </div>
+    <div class="detail-cell">
+      <div class="dlbl">Join Date</div>
+      <div class="dval">${fmtDate(r.grpMemDate)}</div>
+    </div>
+    <div class="detail-cell">
+      <div class="dlbl">Stop Date</div>
+      <div class="dval ${!r.stopDate?'empty-val':''}" style="${r.stopDate?'color:var(--rose)':''}">${r.stopDate?fmtDate(r.stopDate):'Still active'}</div>
+    </div>
+    <div class="detail-cell">
+      <div class="dlbl">Captured Date</div>
+      <div class="dval">${esc(r.capturedDate)}</div>
+    </div>
+    <div class="detail-cell">
+      <div class="dlbl">Captured Time</div>
+      <div class="dval mono">${esc(r.capturedTime)}</div>
+    </div>
+    <div class="detail-cell full">
+      <div class="dlbl">Captured By</div>
+      <div class="dval">${esc(r.capturedBy)}</div>
+    </div>
+    <div class="detail-cell full">
+      <div class="dlbl">Comments</div>
+      <div class="dval ${!r.comments?'empty-val':''}">${r.comments?esc(r.comments):'No comments recorded.'}</div>
+    </div>
+  `;
+  document.getElementById('viewOverlay').classList.add('show');
+}
+function closeView(){ document.getElementById('viewOverlay').classList.remove('show'); }
+function editFromView(){ closeView(); if(viewingID!==null) openEdit(viewingID); }
+
+/* ══════════════════════════════════════════════
+   DELETE
+══════════════════════════════════════════════ */
+function openDelete(id){
+  const r=rows.find(x=>x.id===id); if(!r)return;
+  const m=getMember(r.ppcode);
+  document.getElementById('dID').value        =id;
+  document.getElementById('dName').textContent='#'+id+' — '+m.name+' / Group '+r.groupID;
+  document.getElementById('delOverlay').classList.add('show');
+}
+function closeDel(){ document.getElementById('delOverlay').classList.remove('show'); }
+function confirmDelete(){
+  const id=Number(document.getElementById('dID').value);
+  rows=rows.filter(x=>x.id!==id);
+  closeDel(); doFilter(); updateStats();
+  showToast('Member record #'+id+' permanently deleted.','danger');
+}
+
+/* ── Backdrop closes ── */
+['formOverlay','viewOverlay','delOverlay'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('show'); });
+});
+
+/* ── Init ── */
+populateDropdowns();
+render(rows);
+updateStats();
+</script>
+</body>
+</html>
